@@ -8,7 +8,7 @@ LULESH_EXEC = lulesh2.0
 MPI_INC = /opt/local/include/openmpi
 MPI_LIB = /opt/local/lib
 
-SERCXX = g++-14 -pg -DUSE_MPI=0
+SERCXX = g++ -pg -DUSE_MPI=0
 MPICXX = mpig++ -DUSE_MPI=1
 CXX = $(SERCXX)
 
@@ -22,7 +22,7 @@ OBJECTS2.0 = $(SOURCES2.0:.cc=.o)
 
 #Default build suggestions with OpenMP for g++
 CXXFLAGS = -g -O3 -fopenmp -I. -Wall
-LDFLAGS = -L/usr/local/Cellar/gcc/14.2.0_1/lib/gcc/14/ -g -O3 -fopenmp -pg /usr/local/Cellar/gcc/14.2.0_1/lib/gcc/14/gcrt1.o
+LDFLAGS = -L/usr/local/Cellar/gcc/14.2.0_1/lib/gcc/14/ -g -O3 -fopenmp -pg
 
 
 #Below are reasonable default flags for a serial build
