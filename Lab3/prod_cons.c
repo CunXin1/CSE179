@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define N 10000000
+#define N 1000000000
 
 /* Some random number constants from numerical recipies */
 #define SEED 2531
@@ -33,37 +33,38 @@ void fill_rand(int length, double *a)
 /* function to sum the elements of an array */
 double Sum_array(int length, double *a)
 {
-   int i;  double sum = 0.0;
-//set the number of threads
-   omp_set_num_threads(4);
-   printf("Number of threads: %d\n", omp_get_max_threads());
-  #pragma omp parallel for reduction(+:sum)
-  
-   for (i=0;i<length;i++) {
-   sum += *(a+i);  
+  int i;
+  double sum = 0.0;
+
+
+#pragma omp parallel for reduction(+ : sum)
+
+  for (i = 0; i < length; i++)
+  {
+    sum += *(a + i);
   }
-  
-   return sum; 
+
+  return sum;
 }
 
 double Sum_array1(int length, double *a)
 {
-    double sum = 0.0;
-    int i;
+  double sum = 0.0;
+  int i;
 
-    #pragma omp parallel
+#pragma omp parallel
+  {
+    double local_sum = 0.0;
+#pragma omp for
+    for (i = 0; i < length; i++)
     {
-        double local_sum = 0.0;
-        #pragma omp for
-        for (i = 0; i < length; i++) {
-            local_sum += a[i];
-        }
-        #pragma omp atomic
-        sum += local_sum;
+      local_sum += a[i];
     }
-    return sum;
+#pragma omp atomic
+    sum += local_sum;
+  }
+  return sum;
 }
-
 
 int main()
 {
@@ -72,13 +73,63 @@ int main()
 
   A = (double *)malloc(N * sizeof(double));
 
+  omp_set_num_threads(2);
+  printf("Number of threads: %d\n", omp_get_max_threads());
+
+
   runtime = omp_get_wtime();
 
   fill_rand(N, A); // Producer: fill an array of data
 
-  sum = Sum_array1(N, A); // Consumer: sum the array
+  sum = Sum_array(N, A); // Consumer: sum the array
 
   runtime = omp_get_wtime() - runtime;
 
-  printf(" In %lf seconds, The sum is %lf \n", runtime, sum);
+  printf("For Sum_array, In %lf seconds, The sum is %lf \n", runtime, sum);
+
+  
+  omp_set_num_threads(4);
+  printf("Number of threads: %d\n", omp_get_max_threads());
+
+
+  runtime = omp_get_wtime();
+
+  fill_rand(N, A); // Producer: fill an array of data
+
+  sum = Sum_array(N, A); // Consumer: sum the array
+
+  runtime = omp_get_wtime() - runtime;
+
+  printf("For Sum_array, In %lf seconds, The sum is %lf \n", runtime, sum);
+
+  
+  omp_set_num_threads(8);
+  printf("Number of threads: %d\n", omp_get_max_threads());
+
+
+  runtime = omp_get_wtime();
+
+  fill_rand(N, A); // Producer: fill an array of data
+
+  sum = Sum_array(N, A); // Consumer: sum the array
+
+  runtime = omp_get_wtime() - runtime;
+
+  printf("For Sum_array, In %lf seconds, The sum is %lf \n", runtime, sum);
+
+  
+  omp_set_num_threads(16);
+  printf("Number of threads: %d\n", omp_get_max_threads());
+
+
+  runtime = omp_get_wtime();
+
+  fill_rand(N, A); // Producer: fill an array of data
+
+  sum = Sum_array(N, A); // Consumer: sum the array
+
+  runtime = omp_get_wtime() - runtime;
+
+  printf("For Sum_array, In %lf seconds, The sum is %lf \n", runtime, sum);
+
 }

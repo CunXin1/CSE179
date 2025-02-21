@@ -66,14 +66,30 @@ int main(int argc, char *argv[]) {
      p = init_list(p);
      head = p;
 
+     omp_set_num_threads(16);
+     printf("Number of threads: %d\n", omp_get_max_threads());
+     printf("Using OpenMP Tasks\n");
+ 
      start = omp_get_wtime();
+ 
+     #pragma omp parallel
      {
-        while (p != NULL) {
-		   processwork(p);
-		   p = p->next;
-        }
-     }
+      #pragma omp single
+      {
+          while (p != NULL) {
+              
+              struct node* localPtr = p;
+              p = p->next;
+      
+              #pragma omp task
+              {
 
+                  processwork(localPtr);
+              }
+          }
+      }
+     }
+ 
      end = omp_get_wtime();
      p = head;
 	 while (p != NULL) {
