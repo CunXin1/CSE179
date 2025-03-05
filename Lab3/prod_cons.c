@@ -118,7 +118,7 @@ int main()
   printf("For Sum_array, In %lf seconds, The sum is %lf \n", runtime, sum);
 
   
-  omp_set_num_threads(16);
+  omp_set_num_threads(64);
   printf("Number of threads: %d\n", omp_get_max_threads());
 
 

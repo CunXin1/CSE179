@@ -1,0 +1,42 @@
+Lab 4 Report
+
+1. 
+
+PS C:\Users\Administrator\CSE179\lab4> gcc monte.c -o monte -pthread
+PS C:\Users\Administrator\CSE179\lab4> ./monte
+Threads: 2, Estimate: 3.141729, Time: 1352.18 ms, %Error: 0.0044%
+Threads: 4, Estimate: 3.141623, Time: 775.34 ms, %Error: 0.0010%
+Threads: 8, Estimate: 3.141641, Time: 540.53 ms, %Error: 0.0015%
+Threads: 16, Estimate: 3.141601, Time: 441.81 ms, %Error: 0.0003%
+
+The Monte Carlo simulation efficiently estimates π with high accuracy, achieving an error as low as 0.0003%. 
+Increasing the number of threads significantly reduces execution time, from 1352.18 ms (2 threads) to 441.81 ms (16 threads). 
+However, performance gains diminish beyond 8 threads, likely due to CPU limitations or threading overhead.
+
+
+2. 
+
+PS C:\Users\Administrator\CSE179\lab4> gcc bankAccount.c -o bank -pthread
+PS C:\Users\Administrator\CSE179\lab4> ./bank 2
+
+The final balance of the account using 2 threads is $0.00.
+
+PS C:\Users\Administrator\CSE179\lab4> ./bank 4
+
+The final balance of the account using 4 threads is $0.00.
+
+PS C:\Users\Administrator\CSE179\lab4> ./bank 8
+
+The final balance of the account using 8 threads is $0.00.
+
+PS C:\Users\Administrator\CSE179\lab4> ./bank 1
+
+The final balance of the account using 1 threads is $-100000.00.
+
+I fixed the bank account simulation by allocating memory for thread IDs and adding proper mutex locking in the critical section. 
+With even threads, odd threads deposit and even threads withdraw, resulting in a final balance of $0.00, 
+while one thread shows the expected negative balance.
+
+3. 
+
+
